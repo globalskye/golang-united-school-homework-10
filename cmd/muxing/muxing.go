@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/GolangUnited/helloweb/cmd/handlers"
 	"log"
 	"net/http"
 	"os"
@@ -20,6 +21,11 @@ main function reads host/port from env just for an example, flavor it following 
 // Start /** Starts the web server listener on given host and port.
 func Start(host string, port int) {
 	router := mux.NewRouter()
+
+	router.HandleFunc("/name/{PARAM}", handlers.HelloParam).Methods(http.MethodGet)
+	router.HandleFunc("/bad", handlers.InternalError).Methods(http.MethodGet)
+	router.HandleFunc("/data", handlers.ParseBody).Methods(http.MethodPost)
+	router.HandleFunc("/headers", handlers.HeadersSum).Methods(http.MethodPost)
 
 	log.Println(fmt.Printf("Starting API server on %s:%d\n", host, port))
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), router); err != nil {
